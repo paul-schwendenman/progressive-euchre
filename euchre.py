@@ -1,6 +1,37 @@
+import argparse
 
+rounds7 = [
+    [
+        [[1, 2], [3, 4]],
+        [[5, 6], [7, 8]],
+    ],
+    [
+        [[2, 4], [5, 7]],
+        [[6, 8], [1, 3]],
+    ],
+    [
+        [[5, 8], [6, 7]],
+        [[1, 4], [2, 3]],
+    ],
+    [
+        [[4, 8], [1, 5]],
+        [[2, 6], [3, 7]],
+    ],
+    [
+        [[1, 6], [2, 5]],
+        [[3, 8], [4, 7]],
+    ],
+    [
+        [[2, 8], [3, 5]],
+        [[4, 6], [1, 7]],
+    ],
+    [
+        [[3, 6], [4, 5]],
+        [[1, 8], [2, 7]],
+    ],
+]
 
-rounds = [
+rounds11 = [
     [
         [[1, 2], [3, 4]],
         [[5, 6], [7, 8]],
@@ -73,9 +104,15 @@ scores = [
     [5, 5, 8, 7, 5, 7, 4, 7, 11, 3, 4],
 ]
 
-mine = [5,6, 5, 8, 5, 7, 5, 1, 5, 3, 4]
+mine = [5, 6, 5, 8, 5, 7, 5, 1, 5, 3, 4]
 
-def main():
+
+def main(players):
+    if players == 8:
+        rounds = rounds7
+    elif players == 12:
+        rounds = rounds11
+
     print len(rounds)
 
     for n, score in enumerate(scores):
@@ -88,10 +125,9 @@ def main():
                 if not score[0] == score[1]:
                     print "Players %d and %d differ on round %d scores of %d and %d" % (team[0], team[1], roundno + 1, score[0], score[1])
                 else:
-                    pass
-                    #print "Players %d and %d agree on round %d score of %d" % (team[0], team[1], roundno + 1, score[0])
+                    print "Players %d and %d agree on round %d score of %d" % (team[0], team[1], roundno + 1, score[0])
 
-    print list(reversed([a[0] + 1 for a in sorted(enumerate([sum(n) for n in scores]), key = lambda a: a[1])]))
+    print list(reversed([a[0] + 1 for a in sorted(enumerate([sum(n) for n in scores]), key=lambda a: a[1])]))
 
     for n, tables in enumerate(rounds):
         for table in tables:
@@ -102,5 +138,9 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Check your progressive euchre charts.')
+    parser.add_argument('--players', default=12, type=int,
+        help='specify 8 or 12 players (default: 12)')
+    args = parser.parse_args()
 
+    main(args.players)
