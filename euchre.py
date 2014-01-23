@@ -108,16 +108,18 @@ scores = [
 
 mine = [5, 6, 5, 8, 5, 7, 5, 1, 5, 3, 4]
 
+
 def setup_logging(lvl):
     logger = logging.getLogger('')
     ch = logging.StreamHandler()
     ch.setLevel(lvl)
     ch.setFormatter(logging.Formatter('%(message)s'))
-    
+
     logger.addHandler(ch)
     logger.setLevel(logging.DEBUG)
     return logger
-    
+
+
 def get_args():
     parser = argparse.ArgumentParser(description='Check your progressive euchre charts.')
     parser.add_argument('--players', default=12, type=int,
@@ -126,7 +128,7 @@ def get_args():
         const=logging.DEBUG, default=logging.INFO,
         help='Set verbosity')
     args = parser.parse_args()
-    
+
     return args.players, args.verbosity
 
 
