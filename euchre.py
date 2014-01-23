@@ -2,7 +2,6 @@ import argparse
 import logging
 
 
-
 rounds7 = [
     [
         [[1, 2], [3, 4]],
@@ -113,10 +112,10 @@ def setup_logging(lvl):
     logger = logging.getLogger('')
     ch = logging.StreamHandler()
     ch.setLevel(lvl)
-    ch.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
+    ch.setFormatter(logging.Formatter('%(message)s'))
     
     logger.addHandler(ch)
-    logger.setLevel(lvl)
+    logger.setLevel(logging.DEBUG)
     return logger
     
 def get_args():
@@ -124,11 +123,9 @@ def get_args():
     parser.add_argument('--players', default=12, type=int,
         help='specify 8 or 12 players (default: 12)')
     parser.add_argument('--verbose', '-v', dest='verbosity', action='store_const',
-        const=logging.INFO, default=logging.DEBUG,
+        const=logging.DEBUG, default=logging.INFO,
         help='Set verbosity')
     args = parser.parse_args()
-    
-    print args.verbosity
     
     return args.players, args.verbosity
 
@@ -139,21 +136,19 @@ def main(players, logger):
     elif players == 12:
         rounds = rounds11
 
-    print len(rounds)
-
     for n, score in enumerate(scores):
-        print "%d: %d" % (n + 1, sum(score))
+        logger.debug("%d: %d", n + 1, sum(score))
 
     for roundno, tables in enumerate(rounds):
         for table in tables:
             for team in table:
                 score = scores[team[0] - 1][roundno], scores[team[1] - 1][roundno]
                 if not score[0] == score[1]:
-                    logger.debug("Players %d and %d differ on round %d scores of %d and %d", team[0], team[1], roundno + 1, score[0], score[1])
+                    logger.info("Players %d and %d differ on round %d scores of %d and %d", team[0], team[1], roundno + 1, score[0], score[1])
                 else:
-                    logger.info("Players %d and %d agree on round %d score of %d", team[0], team[1], roundno + 1, score[0])
+                    logger.debug("Players %d and %d agree on round %d score of %d", team[0], team[1], roundno + 1, score[0])
 
-    print list(reversed([a[0] + 1 for a in sorted(enumerate([sum(n) for n in scores]), key=lambda a: a[1])]))
+    logger.info(list(reversed([a[0] + 1 for a in sorted(enumerate([sum(n) for n in scores]), key=lambda a: a[1])])))
 
     for n, tables in enumerate(rounds):
         for table in tables:
